@@ -4,15 +4,19 @@ public class Note {
     int _id;
     String weather;
     String address;
+    String locationX;
+    String locationY;
     String contents;
     String mood;
     String picture;
     String createDateStr;
 
-    public Note(int _id, String weather, String address, String contents, String mood, String picture, String createDateStr) {
+    public Note(int _id, String weather, String address, String locationX, String locationY, String contents, String mood, String picture, String createDateStr) {
         this._id = _id;
         this.weather = weather;
         this.address = address;
+        this.locationX = locationX;
+        this.locationY = locationY;
         this.contents = contents;
         this.mood = mood;
         this.picture = picture;
@@ -41,6 +45,22 @@ public class Note {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getLocationX() {
+        return locationX;
+    }
+
+    public void setLocationX(String locationX) {
+        this.locationX = locationX;
+    }
+
+    public String getLocationY() {
+        return locationY;
+    }
+
+    public void setLocationY(String locationY) {
+        this.locationY = locationY;
     }
 
     public String getContents() {
