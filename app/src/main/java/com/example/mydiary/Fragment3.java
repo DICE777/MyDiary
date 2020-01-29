@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -22,10 +23,15 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class Fragment3 extends Fragment {
 
@@ -92,6 +98,27 @@ public class Fragment3 extends Fragment {
         chart2.animateXY(1500, 1500);
 
         setData2();
+
+        chart3 = rootView.findViewById(R.id.chart3);
+
+        chart3.getDescription().setEnabled(false);
+        chart3.setDrawGridBackground(false);
+        chart3.setBackgroundColor(Color.WHITE);
+        chart3.setViewPortOffsets(0, 0, 0, 0);
+
+        Legend legend3 =chart3.getLegend();
+        legend3.setEnabled(false);
+
+        XAxis xAxis3 = chart3.getXAxis();
+        xAxis3.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+        xAxis3.setTextSize(10f);
+        xAxis3.setTextColor(Color.WHITE);
+        xAxis3.setDrawAxisLine(false);
+        xAxis3.setDrawGridLines(true);
+        xAxis3.setTextColor(Color.rgb(255, 192, 56));
+        xAxis3.setCenterAxisLabels(true);
+        xAxis3.setGranularity(1f);
+
 
     }
 
