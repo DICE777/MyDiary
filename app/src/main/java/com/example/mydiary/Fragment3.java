@@ -13,17 +13,18 @@ import androidx.fragment.app.Fragment;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
@@ -77,11 +78,11 @@ public class Fragment3 extends Fragment {
         chart2 = rootView.findViewById(R.id.chart2);
         chart2.setDrawValueAboveBar(true);
 
-        chart2.getDescription().setEnabled(true);
+        chart2.getDescription().setEnabled(false);
         chart2.setDrawGridBackground(false);
 
         XAxis xAxis = chart2.getXAxis();
-        xAxis.setEnabled(true);
+        xAxis.setEnabled(false);
 
         YAxis leftAxis = chart2.getAxisLeft();
         leftAxis.setLabelCount(6, false);
@@ -103,6 +104,7 @@ public class Fragment3 extends Fragment {
 
         chart3.getDescription().setEnabled(false);
         chart3.setDrawGridBackground(false);
+
         chart3.setBackgroundColor(Color.WHITE);
         chart3.setViewPortOffsets(0, 0, 0, 0);
 
@@ -118,8 +120,31 @@ public class Fragment3 extends Fragment {
         xAxis3.setTextColor(Color.rgb(255, 192, 56));
         xAxis3.setCenterAxisLabels(true);
         xAxis3.setGranularity(1f);
+        xAxis3.setValueFormatter(new ValueFormatter() {
 
+            private final SimpleDateFormat mFormat = new SimpleDateFormat("MM-DD", Locale.KOREA);
 
+            @Override
+            public String getFormattedValue(float value) {
+                long millis = TimeUnit.HOURS.toMillis((long) value);
+                return mFormat.format(new Date(millis));
+            }
+        });
+
+        YAxis leftAxis3 = chart3.getAxisLeft();
+        leftAxis3.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        leftAxis3.setTextColor(ColorTemplate.getHoloBlue());
+        leftAxis3.setDrawGridLines(true);
+        leftAxis3.setGranularityEnabled(true);
+        leftAxis3.setAxisMinimum(0f);
+        leftAxis3.setAxisMaximum(170f);
+        leftAxis3.setYOffset(-9f);
+        leftAxis3.setTextColor(Color.rgb(255, 192, 56));
+
+        YAxis rightAxis3 = chart3.getAxisRight();
+        rightAxis3.setEnabled(false);
+
+        setData3();
     }
 
     private void setData1() {
@@ -176,5 +201,38 @@ public class Fragment3 extends Fragment {
 
         chart2.setData(data);
         chart2.invalidate();
+    }
+
+    private void setData3() {
+
+        ArrayList<Entry> values = new ArrayList<>();
+        values.add(new Entry(24f, 20.0f));
+        values.add(new Entry(48f, 50.0f));
+        values.add(new Entry(72f, 30.0f));
+        values.add(new Entry(96f, 70.0f));
+        values.add(new Entry(120f, 90.0f));
+
+        // create a dataset and give it a type
+        LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+        set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set1.setColor(ColorTemplate.getHoloBlue());
+        set1.setValueTextColor(ColorTemplate.getHoloBlue());
+        set1.setLineWidth(1.5f);
+        set1.setDrawCircles(true);
+        set1.setDrawValues(false);
+        set1.setFillAlpha(65);
+        set1.setFillColor(ColorTemplate.getHoloBlue());
+        set1.setHighLightColor(Color.rgb(244, 117, 117));
+        set1.setDrawCircleHole(false);
+
+        // create a data object with the data sets
+        LineData data = new LineData(set1);
+        data.setValueTextColor(Color.WHITE);
+        data.setValueTextSize(9f);
+
+        // set data
+        chart3.setData(data);
+        chart3.invalidate();
+
     }
 }
