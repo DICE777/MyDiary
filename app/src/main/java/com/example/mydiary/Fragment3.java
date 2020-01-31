@@ -78,11 +78,11 @@ public class Fragment3 extends Fragment {
         chart2 = rootView.findViewById(R.id.chart2);
         chart2.setDrawValueAboveBar(true);
 
-        chart2.getDescription().setEnabled(true);
+        chart2.getDescription().setEnabled(false);
         chart2.setDrawGridBackground(false);
 
         XAxis xAxis = chart2.getXAxis();
-        xAxis.setEnabled(true);
+        xAxis.setEnabled(false);
 
         YAxis leftAxis = chart2.getAxisLeft();
         leftAxis.setLabelCount(6, false);
