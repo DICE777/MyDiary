@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,10 @@ public class Fragment2 extends Fragment {
 
     Context context;
     OnTabItemSelectedListener listener;
+    OnRequestListener requestListener;
+
+    TextView dateTextView;
+    TextView locationTextView;
 
 
     @Override
@@ -29,6 +34,10 @@ public class Fragment2 extends Fragment {
         if (context instanceof OnTabItemSelectedListener) {
             listener = (OnTabItemSelectedListener) context;
         }
+
+        if (context instanceof OnRequestListener) {
+            requestListener = (OnRequestListener) context;
+        }
     }
 
     @Override
@@ -38,6 +47,7 @@ public class Fragment2 extends Fragment {
         if (context != null) {
             context = null;
             listener = null;
+            requestListener = null;
         }
     }
 
@@ -48,10 +58,17 @@ public class Fragment2 extends Fragment {
 
         initUI(rootView);
 
+        if (requestListener != null) {
+            requestListener.onRequest("getCurrentLocation");
+        }
+
         return rootView;
     }
 
     private void initUI(ViewGroup rootView) {
+
+        dateTextView = rootView.findViewById(R.id.dateTextView);
+        locationTextView = rootView.findViewById(R.id.locationTextView);
 
         Button saveButton = rootView.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -92,5 +109,13 @@ public class Fragment2 extends Fragment {
         });
 
         sliderView.setInitialIndex(2);
+    }
+
+    public void setAddress(String data) {
+        locationTextView.setText(data);
+    }
+
+    public void setDateString(String dateString) {
+        dateTextView.setText(dateString);
     }
 }
