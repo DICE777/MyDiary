@@ -103,13 +103,10 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                 double longitude = currentLocation.getLongitude();
                 String message = "Last Location -> Latitude : " + latitude + "\nLongitude: " + longitude;
                 println(message);
-
+              
                 getCurrentWeather();
                 getCurrentAddress();
             }
-
-
-
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -129,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     private void println(String data) {
         Log.d(TAG, data);
     }
-
+  
     class GPSListener implements LocationListener {
         public void onLocationChanged(Location location) {
             currentLocation = location;
