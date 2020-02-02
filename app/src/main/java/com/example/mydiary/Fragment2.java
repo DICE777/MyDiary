@@ -16,12 +16,14 @@ import androidx.fragment.app.Fragment;
 import com.github.channguyen.rsv.RangeSliderView;
 
 public class Fragment2 extends Fragment {
+    private static final String TAG = Fragment2.class.getCanonicalName();
 
     Context context;
     OnTabItemSelectedListener listener;
     OnRequestListener requestListener;
 
     TextView dateTextView;
+    TextView locationTextView;
 
 
     @Override
@@ -67,6 +69,7 @@ public class Fragment2 extends Fragment {
     private void initUI(ViewGroup rootView) {
 
         dateTextView = rootView.findViewById(R.id.dateTextView);
+        locationTextView = rootView.findViewById(R.id.locationTextView);
 
         Button saveButton = rootView.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +110,10 @@ public class Fragment2 extends Fragment {
         });
 
         sliderView.setInitialIndex(2);
+    }
+
+    public void setAddress(String data) {
+        locationTextView.setText(data);
     }
 
     public void setDateString(String dateString) {
