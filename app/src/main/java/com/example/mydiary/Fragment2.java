@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ public class Fragment2 extends Fragment {
     OnTabItemSelectedListener listener;
     OnRequestListener requestListener;
 
+    ImageView weatherIcon;
     TextView dateTextView;
     TextView locationTextView;
 
@@ -68,6 +70,7 @@ public class Fragment2 extends Fragment {
 
     private void initUI(ViewGroup rootView) {
 
+        weatherIcon = rootView.findViewById(R.id.weatherIcon);
         dateTextView = rootView.findViewById(R.id.dateTextView);
         locationTextView = rootView.findViewById(R.id.locationTextView);
 
@@ -111,6 +114,27 @@ public class Fragment2 extends Fragment {
 
         sliderView.setInitialIndex(2);
     }
+
+    /**
+     * ① 맑음
+     * ② 구름 조금
+     * ③ 구름 많음
+     * ④ 흐림
+     * ⑤ 비
+     * ⑥ 눈/비
+     * ⑦ 눈
+     *
+     */
+    public void setWeater(String data) {
+        if (data != null) {
+            if (data.equals("맑음")) {
+                weatherIcon.setImageResource(R.drawable.weather_1);
+            }
+            ///////start to coding
+        }
+    }
+
+
 
     public void setAddress(String data) {
         locationTextView.setText(data);
