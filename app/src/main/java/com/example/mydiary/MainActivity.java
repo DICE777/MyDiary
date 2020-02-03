@@ -10,13 +10,25 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.example.mydiary.data.WeatherResult;
 import com.github.mikephil.charting.data.PieData;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.pedro.library.AutoPermissions;
+import com.pedro.library.AutoPermissionsListener;
+import com.stanfy.gsonxml.GsonXml;
+import com.stanfy.gsonxml.GsonXmlBuilder;
+import com.stanfy.gsonxml.XmlParserCreator;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,7 +36,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements OnTabItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements OnTabItemSelectedListener, OnRequestListener, AutoPermissionsListener, MyApplication.OnResponseListener{
 
     public static final String TAG = MainActivity.class.getCanonicalName();
 
@@ -75,9 +87,44 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                 return false;
             }
         });
+
+        AutoPermissions.Companion.loadAllPermissions(this, 101);
+
+        setPicturePath();
     }
 
+    public void setPicturePath() {
+        String sdcardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        AppConstants.FOLDER_PHOTO = sdcardPath + File.separator + "photo";
+    }
 
+    @Override
+    public void onTabSelected(int position) {
+        if (position == 0) {
+            bottomNavigationView.setSelectedItemId(R.id.tab1);
+        } else if (position == 1) {
+            bottomNavigationView.setSelectedItemId(R.id.tab2);
+        } else if (position == 2) {
+            bottomNavigationView.setSelectedItemId(R.id.tab3);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        AutoPermissions.Companion.parsePermissions(this, requestCode, permissions, this);
+    }
+
+    @Override
+    public void onDenied(int requestCode, @NonNull String[] permissions) {
+        Toast.makeText(this, "permission denied : " + permissions.length, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onGranted(int requestCode, @NonNull String[] permissions) {
+        Toast.makeText(this, "permission granted : " + permissions.length, Toast.LENGTH_LONG).show();
+    }
 
     public void onRequest(String command) {
         if (command != null) {
@@ -88,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     }
 
     public void getCurrentLocation() {
+        // set current time
         currentDate = new Date();
         currentDateString = AppConstants.dateFormat3.format(currentDate);
         if (fragment2 != null) {
@@ -131,21 +179,6 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         }
     }
 
-    @Override
-    public void onTabSelected(int position) {
-        if (position == 0) {
-            bottomNavigationView.setSelectedItemId(R.id.tab1);
-        } else if (position == 1) {
-            bottomNavigationView.setSelectedItemId(R.id.tab2);
-        } else if (position == 2) {
-            bottomNavigationView.setSelectedItemId(R.id.tab3);
-        }
-    }
-
-    private void println(String data) {
-        Log.d(TAG, data);
-    }
-  
     class GPSListener implements LocationListener {
         public void onLocationChanged(Location location) {
             currentLocation = location;
@@ -221,5 +254,38 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
         Map<String, String> params = new HashMap<String ,String>();
 
+        MyApplication.send(AppConstants.REQ_WEATHER_BY_GRID, Request.Method.GET, url, params, this);
     }
+
+    public void processResponse(int requestCode, int responseCode, String response) {
+        if (responseCode == 200) {
+            if (requestCode == AppConstants.REQ_WEATHER_BY_GRID) {
+                XmlParserCreator parserCreator = new XmlParserCreator() {
+                    @Override
+                    public XmlPullParser createParser() {
+                        try {
+                            return XmlPullParserFactory.newInstance().newPullParser();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                };
+
+                GsonXml gsonXml = new GsonXmlBuilder()
+                        .setXmlParserCreator(parserCreator)
+                        .setSameNameLists(true)
+                        .create();
+
+                WeatherResult weather = gsonXml.fromXml(response, WeatherResult.class);
+
+                // current time standard
+
+            }
+        }
+    }
+
+    private void println(String data) {
+        Log.d(TAG, data);
+    }
+
 }
