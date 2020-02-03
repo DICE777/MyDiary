@@ -107,6 +107,25 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                 getCurrentWeather();
                 getCurrentAddress();
             }
+
+            gpsListener = new GPSListener();
+            long minTime = 10000;
+            float minDistance = 0;
+
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, gpsListener);
+            println("Current location requested.");
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopLocationService() {
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        try {
+            manager.removeUpdates(gpsListener);
+            println("Current location requested");
         } catch (SecurityException e) {
             e.printStackTrace();
         }

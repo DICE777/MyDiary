@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.github.channguyen.rsv.RangeSliderView;
 
 public class Fragment2 extends Fragment {
+    private static final String TAG = Fragment2.class.getCanonicalName();
 
     Context context;
     OnTabItemSelectedListener listener;
