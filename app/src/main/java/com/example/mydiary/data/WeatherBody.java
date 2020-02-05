@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-class WeatherBody {
+public class WeatherBody {
 
     @SerializedName("data")
     public ArrayList<WeatherItem> datas;

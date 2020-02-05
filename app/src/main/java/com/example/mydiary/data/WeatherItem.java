@@ -1,6 +1,6 @@
 package com.example.mydiary.data;
 
-class WeatherItem {
+public class WeatherItem {
 
     public int hour;
     public int day;

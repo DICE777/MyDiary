@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.example.mydiary.data.WeatherItem;
 import com.example.mydiary.data.WeatherResult;
 import com.github.mikephil.charting.data.PieData;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -279,8 +280,41 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                 WeatherResult weather = gsonXml.fromXml(response, WeatherResult.class);
 
                 // current time standard
+                try {
+                    Date tmDate = AppConstants.dateFormat.parse(weather.header.tm);
+                    String tmDateText = AppConstants.dateFormat2.format(tmDate);
+                    println("기준 시간: " + tmDateText);
 
+                    for (int i = 0; i < weather.body.datas.size(); i++) {
+                        WeatherItem item = weather.body.datas.get(i);
+                        println("#" + i + "시간: " + item.hour + "시, " + item.day + "일째");
+                        println(" 날씨: " + item.wfKor);
+                        println(" 기온: " + item.temp + " C");
+                        println(" 강수확률: " + item.pop + "%");
+
+                        println("debug 1 : " + (int)Math.round(item.ws * 10 ));
+                        float ws = Float.valueOf(String.valueOf((int)Math.round(item.ws * 10))) / 10.0f;
+                        println(" 풍속: " + ws + " m/s");
+                    }
+
+                    WeatherItem item = weather.body.datas.get(0);
+                    currentWeather = item.wfKor;
+                    if (fragment2 != null) {
+                        fragment2.setWeather(item.wfKor);
+                    }
+
+                    if (locationCount > 0) {
+                        stopLocationService();;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                println("Unknown request code: " + requestCode);
             }
+        } else {
+            println("Failure response code : " + responseCode);
         }
     }
 
