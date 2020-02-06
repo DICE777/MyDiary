@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -279,6 +281,75 @@ public class Fragment2 extends Fragment {
             startActivityForResult(intent, AppConstants.REQ_PHOTO_CAPTURE);
         }
     }
+
+    public void showPhotoSelectionActivity() {
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, AppConstants.REQ_PHOTO_SELECTION);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (intent != null) {
+            switch (requestCode) {
+                case AppConstants.REQ_PHOTO_CAPTURE:
+                    Log.d(TAG, "onActivityResult() for REQ_PHOTO_CAPTURE");
+                    Log.d(TAG, "resultCode : " + resultCode);
+
+                    resultPhotoBitmap = decodeSampledBitmapFromResource(file, pictureImageView.getWidth(), pictureImageView.getHeight());
+                    pictureImageView.setImageBitmap(resultPhotoBitmap);
+
+                    break;
+                case AppConstants.REQ_PHOTO_SELECTION:
+                    Log.d(TAG, "onActivityResult() for REQ_PHOTO_SELECTION");
+
+                    Uri selectedImage = intent.getData();
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                    Cursor cursor = context.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    String filePath = cursor.getString(columnIndex);
+                    cursor.close();
+
+                    resultPhotoBitmap = decodeSampledBitmapFromResource(new File(filePath), pictureImageView.getWidth(), pictureImageView.getHeight());
+                    pictureImageView.setImageBitmap(resultPhotoBitmap);
+                    isPhotoCaptured = true;
+
+                    break;
+            }
+        }
+    }
+
+    public static Bitmap decodeSampledBitmapFromResource(File res, int reqWidth, int reqHeight) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(res.getAbsolutePath(), options);
+
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(res.getAbsolutePath(), options);
+    }
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height;
+            final int halfWidth = width;
+
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize = 2;
+            }
+        }
+        return inSampleSize;
+    }
+
 
     private File createFile() {
         String filename = "capture.jpg";
