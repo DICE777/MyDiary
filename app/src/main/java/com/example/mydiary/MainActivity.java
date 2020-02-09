@@ -180,11 +180,6 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         }
     }
 
-    @Override
-    public void onSlide(int index) {
-
-    }
-
     class GPSListener implements LocationListener {
         public void onLocationChanged(Location location) {
             currentLocation = location;
