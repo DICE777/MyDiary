@@ -1,6 +1,7 @@
 package com.example.mydiary;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -31,6 +32,40 @@ public class NoteDatabase {
 
         dbHelper = new DatabaseHelper(context);
         db = dbHelper.getWritableDatabase();
+
+        return true;
+    }
+
+    public void close() {
+        println("closing database [" + AppConstants.DATABASE_NAME + "].");
+        db.close();
+
+        database = null;
+    }
+
+    public Cursor rawQuery(String SQL) {
+        println("\nexecuteQuery called\n");
+
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(SQL, null);
+            println("cursor count : " + cursor.getCount());
+        } catch (Exception e) {
+            Log.e(TAG, "Exception in executeQuery", e);
+        }
+        return cursor;
+    }
+
+    public boolean execSQL(String SQL) {
+        println("\nexecute called\n");
+
+        try {
+            Log.d(TAG, "SQL : "+ SQL);
+            db.execSQL(SQL);
+        } catch (Exception e) {
+            Log.e(TAG, "Exception in executeQuery", e);
+            return false;
+        }
 
         return true;
     }

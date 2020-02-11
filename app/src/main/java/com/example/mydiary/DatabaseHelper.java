@@ -29,7 +29,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
             Log.e(TAG, "Exception in DROP_SQL", e);
         }
 
-        String CREATE_SQL = "create table" + TABLE_NOTE + "("
+        String CREATE_SQL = "create table " + TABLE_NOTE + "("
                 + "_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                 + " WEATHER TEXT DEFAULT '', "
                 + " ADDRESS TEXT DEFAULT '', "
@@ -38,8 +38,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
                 + " CONTENTS TEXT DEFAULT '', "
                 + " MOOD TEXT, "
                 + " PICTURE TEXT DEFAULT '', "
-                + " CREATE_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP TEXT DEFAULT, "
-                + " MODIFY_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP TEXT DEFAULT "
+                + " CREATE_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+                + " MODIFY_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP "
                 + ")";
 
         try {
@@ -48,11 +48,21 @@ class DatabaseHelper extends SQLiteOpenHelper {
             Log.d(TAG, "Exception in CREATE_SQL", e);
         }
 
+        String CREATE_INDEX_SQL = "create index " + TABLE_NOTE + "_IDX ON " + TABLE_NOTE + "(" + "CREATE_DATE" + ")";
+        try {
+            db.execSQL(CREATE_INDEX_SQL);
+        } catch (Exception e) {
+            Log.e(TAG, "Exception in CREATE_INDEX_SQL", e);
+        }
+    }
 
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        println("opened database [" + AppConstants.DATABASE_NAME + "].");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        println("Upgrading database from version " + oldVersion + " to " + newVersion + ".");
     }
 }
