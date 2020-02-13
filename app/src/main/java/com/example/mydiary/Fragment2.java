@@ -27,8 +27,10 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.github.channguyen.rsv.RangeSliderView;
+import com.github.mikephil.charting.data.PieData;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Date;
 
 public class Fragment2 extends Fragment {
@@ -53,6 +55,15 @@ public class Fragment2 extends Fragment {
 
     File file;
     Bitmap resultPhotoBitmap;
+
+    int mMode = AppConstants.MODE_INSERT;
+    int _id = -1;
+    int weatehrIndex = 0;
+
+    RangeSliderView moodSlider;
+    int moodIndex = 2;
+
+    Note item;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -118,6 +129,12 @@ public class Fragment2 extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mMode == AppConstants.MODE_INSERT) {
+                    saveNote();
+                } else if (mMode == AppConstants.MODE_MODIFY) {
+                    modifyNote();
+                }
+
                 if (listener != null) {
                     listener.onTabSelected(0);
                 }
@@ -128,6 +145,8 @@ public class Fragment2 extends Fragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                deleteNote();
+
                 if (listener != null) {
                     listener.onTabSelected(0);
                 }
@@ -364,5 +383,93 @@ public class Fragment2 extends Fragment {
         String curDateStr = String.valueOf(curDate.getTime());
 
         return curDateStr;
+    }
+
+    private String savePicture() {
+        if (resultPhotoBitmap == null) {
+            NoteDatabase.println("No picture to be saved.");
+            return "";
+        }
+
+        File photoFolder = new File(AppConstants.FOLDER_PHOTO);
+
+        if (!photoFolder.isDirectory()) {
+            Log.d(TAG, "creating photo folder : " + photoFolder);
+            photoFolder.mkdirs();
+        }
+
+        String photoFileName = createFileName();
+        String picturePath = photoFolder + File.separator + photoFileName;
+
+        try {
+            FileOutputStream outputStream = new FileOutputStream(picturePath);
+            resultPhotoBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return picturePath;
+    }
+
+    // DATABASE
+    private void saveNote() {
+        String address = locationTextView.getText().toString();
+        String contents = contentsInput.getText().toString();
+
+        String picturePath = savePicture();
+
+        String sql = "insert into " + NoteDatabase.TABLE_NOTE +
+                "(WEATHER, ADDRESS, LOCATION_X, LOCATION_Y, CONTENTS, MOOD, PICTURE) values(" +
+                "'" + weatehrIndex + "', " +
+                "'" + address + "', " +
+                "'" + "" + "', " +
+                "'" + "" + "', " +
+                "'" + contents + "', " +
+                "'" + moodIndex + "', " +
+                "'" + picturePath + ";)";
+
+        Log.d(TAG, "sql : "+ sql);
+        NoteDatabase database = NoteDatabase.getInstance(context);
+        database.execSQL(sql);
+    }
+
+    private void modifyNote() {
+        if (item != null) {
+            String address = locationTextView.getText().toString();
+            String contents = contentsInput.getText().toString();
+
+            String picturePath = savePicture();
+
+            String sql = "update " + NoteDatabase.TABLE_NOTE +
+                    "set" +
+                    " WEATHER = '" + weatehrIndex + "'" +
+                    " ,ADDRESS = '" + address + "'" +
+                    " ,LOCATION_X = '" + "" + "'" +
+                    " ,LOCATION_Y = '" + "" + "'" +
+                    " ,CONTENTS = '" + contents + "'" +
+                    " ,MOOD = '" + moodIndex + "'" +
+                    " ,PICTURE = '" + picturePath + "'" +
+                    " where " +
+                    " _id = " + item._id;
+
+            Log.d(TAG, "sql : " + sql);
+            NoteDatabase database = NoteDatabase.getInstance(context);
+            database.execSQL(sql);
+        }
+    }
+
+    private void deleteNote() {
+        NoteDatabase.println("deleteNote called.");
+
+        if (item != null) {
+            String sql = "delete from " + NoteDatabase.TABLE_NOTE +
+                    " where " +
+                    " _id = " + item._id;
+
+            Log.d(TAG, "sql : " + sql);
+            NoteDatabase database = NoteDatabase.getInstance(context);
+            database.execSQL(sql);
+        }
     }
 }
