@@ -3,6 +3,7 @@ package com.example.mydiary;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +107,12 @@ public class Fragment1 extends Fragment {
             @Override
             public void onItemClick(NoteAdapter.ViewHolder holder, View view, int position) {
                 Note item = adapter.getItem(position);
-                Toast.makeText(getContext(), "아이템 선택됨: "+ item.getContents(), Toast.LENGTH_LONG).show();
+
+                Log.d(TAG, "Selected item : " + item.get_id());
+
+                if (listener != null) {
+                    listener.showFragment2(item);
+                }
             }
         });
 
@@ -114,7 +120,8 @@ public class Fragment1 extends Fragment {
 
     public int loadNoteListData() {
         NoteDatabase.println("loadNoteListData called");
-        String sql = "select _id, WEATHER, ADDRESS, LOCATION_X, LOCATION_Y, CONTENTS, MOOD, PICTURE," +
+
+        String sql = "select _id, WEATHER, ADDRESS, LOCATION_X, LOCATION_Y, CONTENTS, MOOD, PICTURE, " +
                 "CREATE_DATE, MODIFY_DATE from " + NoteDatabase.TABLE_NOTE + " order by CREATE_DATE desc";
 
         int recordCount = -1;

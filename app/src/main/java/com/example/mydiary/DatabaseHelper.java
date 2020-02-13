@@ -18,9 +18,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        println("creating database [" + AppConstants.DATABASE_NAME + "]");
+        println("creating database [" + AppConstants.DATABASE_NAME + "].");
 
-        println("creating table [" + TABLE_NOTE + "]");
+        println("creating table [" + TABLE_NOTE + "].");
 
         String DROP_SQL = "drop table if exists " + TABLE_NOTE;
         try {
@@ -30,10 +30,10 @@ class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         String CREATE_SQL = "create table " + TABLE_NOTE + "("
-                + "_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+                + " _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                 + " WEATHER TEXT DEFAULT '', "
                 + " ADDRESS TEXT DEFAULT '', "
-                + " LOCATION TEXT DEFAULT '', "
+                + " LOCATION_X TEXT DEFAULT '', "
                 + " LOCATION_Y TEXT DEFAULT '', "
                 + " CONTENTS TEXT DEFAULT '', "
                 + " MOOD TEXT, "

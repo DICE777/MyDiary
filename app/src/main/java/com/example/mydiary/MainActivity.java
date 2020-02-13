@@ -111,6 +111,16 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     }
 
     @Override
+    public void showFragment2(Note item) {
+
+        fragment2 = new Fragment2();
+        fragment2.setItem(item);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment2).commit();
+
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 

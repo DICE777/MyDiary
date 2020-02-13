@@ -9,6 +9,7 @@ public class NoteDatabase {
     public static final String TAG = NoteDatabase.class.getCanonicalName();
 
     private static NoteDatabase database;
+
     public static String TABLE_NOTE = "NOTE";
     public static int DATABASE_VERSION = 1;
 
