@@ -516,9 +516,9 @@ public class Fragment2 extends Fragment {
 
         String picturePath = savePicture();
 
-        String sql = "insert into " + TABLE_NOTE +
+        String sql = "insert into " + NoteDatabase.TABLE_NOTE +
                 "(WEATHER, ADDRESS, LOCATION_X, LOCATION_Y, CONTENTS, MOOD, PICTURE) values(" +
-                "'" + weatherIndex + "', " +
+                "'" + weatehrIndex + "', " +
                 "'" + address + "', " +
                 "'" + "" + "', " +
                 "'" + "" + "', " +
@@ -527,7 +527,7 @@ public class Fragment2 extends Fragment {
                 "'" + picturePath + ";)";
 
         Log.d(TAG, "sql : "+ sql);
-        NoteDatabase database = getInstance(context);
+        NoteDatabase database = NoteDatabase.getInstance(context);
         database.execSQL(sql);
     }
 
@@ -538,9 +538,9 @@ public class Fragment2 extends Fragment {
 
             String picturePath = savePicture();
 
-            String sql = "update " + TABLE_NOTE +
+            String sql = "update " + NoteDatabase.TABLE_NOTE +
                     "set" +
-                    " WEATHER = '" + weatherIndex + "'" +
+                    " WEATHER = '" + weatehrIndex + "'" +
                     " ,ADDRESS = '" + address + "'" +
                     " ,LOCATION_X = '" + "" + "'" +
                     " ,LOCATION_Y = '" + "" + "'" +
@@ -551,7 +551,7 @@ public class Fragment2 extends Fragment {
                     " _id = " + item._id;
 
             Log.d(TAG, "sql : " + sql);
-            NoteDatabase database = getInstance(context);
+            NoteDatabase database = NoteDatabase.getInstance(context);
             database.execSQL(sql);
         }
     }
@@ -560,12 +560,12 @@ public class Fragment2 extends Fragment {
         NoteDatabase.println("deleteNote called.");
 
         if (item != null) {
-            String sql = "delete from " + TABLE_NOTE +
+            String sql = "delete from " + NoteDatabase.TABLE_NOTE +
                     " where " +
                     " _id = " + item._id;
 
             Log.d(TAG, "sql : " + sql);
-            NoteDatabase database = getInstance(context);
+            NoteDatabase database = NoteDatabase.getInstance(context);
             database.execSQL(sql);
         }
     }
