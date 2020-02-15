@@ -1,5 +1,7 @@
 package com.example.mydiary;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,6 +38,9 @@ import java.util.concurrent.TimeUnit;
 
 public class Fragment3 extends Fragment {
 
+    public static final String TAG = Fragment3.class.getCanonicalName();
+    Context context;
+
     PieChart chart;
     BarChart chart2;
     LineChart chart3;
@@ -46,6 +51,8 @@ public class Fragment3 extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment3, container, false);
 
         initUI(rootView);
+
+        loadStartData();
 
         return rootView;
     }
@@ -233,6 +240,19 @@ public class Fragment3 extends Fragment {
         // set data
         chart3.setData(data);
         chart3.invalidate();
+    }
 
+    public void loadStartData() {
+        NoteDatabase database = NoteDatabase.getInstance(context);
+
+        String sql = "selected mood " +
+                " , count(mood) " +
+                "from " + NoteDatabase.TABLE_NOTE + " " +
+                "where create_date >= '2019-02-01' " +
+                " and create_date < '2019-03-01' " +
+                "group by mood";
+
+        Cursor cursor = database.rawQuery(sql);
+        
     }
 }
