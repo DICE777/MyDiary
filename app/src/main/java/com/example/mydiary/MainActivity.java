@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     String currentDateString;
     Date currentDate;
 
+    public static NoteDatabase mDatabase = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +94,36 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         AutoPermissions.Companion.loadAllPermissions(this, 101);
 
         setPicturePath();
+
+        // Open Database
+        openDatabase();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mDatabase != null) {
+            mDatabase.close();
+            mDatabase = null;
+        }
+    }
+
+    public void openDatabase() {
+        // open database
+        if (mDatabase != null) {
+            mDatabase.close();;
+            mDatabase = null;
+        }
+
+        mDatabase = NoteDatabase.getInstance(this);
+        boolean isOpen = mDatabase.open();
+        if (isOpen) {
+            Log.d(TAG, "Note database is open.");
+        } else {
+            Log.d(TAG, "Note database is not open.");
+        }
+
     }
 
     public void setPicturePath() {
@@ -104,7 +136,9 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         if (position == 0) {
             bottomNavigationView.setSelectedItemId(R.id.tab1);
         } else if (position == 1) {
-            bottomNavigationView.setSelectedItemId(R.id.tab2);
+            fragment2 = new Fragment2();
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment2).commit();
         } else if (position == 2) {
             bottomNavigationView.setSelectedItemId(R.id.tab3);
         }

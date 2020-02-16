@@ -245,7 +245,7 @@ public class Fragment3 extends Fragment {
     public void loadStartData() {
         NoteDatabase database = NoteDatabase.getInstance(context);
 
-        String sql = "selected mood " +
+        String sql = "select mood " +
                 " , count(mood) " +
                 "from " + NoteDatabase.TABLE_NOTE + " " +
                 "where create_date >= '2019-02-01' " +
@@ -253,6 +253,6 @@ public class Fragment3 extends Fragment {
                 "group by mood";
 
         Cursor cursor = database.rawQuery(sql);
-        
+
     }
 }

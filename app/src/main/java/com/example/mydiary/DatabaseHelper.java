@@ -30,7 +30,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         String CREATE_SQL = "create table " + TABLE_NOTE + "("
-                + " _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+                + " _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                 + " WEATHER TEXT DEFAULT '', "
                 + " ADDRESS TEXT DEFAULT '', "
                 + " LOCATION_X TEXT DEFAULT '', "
