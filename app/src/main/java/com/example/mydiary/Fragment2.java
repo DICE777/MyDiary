@@ -518,7 +518,7 @@ public class Fragment2 extends Fragment {
 
         String sql = "insert into " + NoteDatabase.TABLE_NOTE +
                 "(WEATHER, ADDRESS, LOCATION_X, LOCATION_Y, CONTENTS, MOOD, PICTURE) values(" +
-                "'" + weatehrIndex + "', " +
+                "'" + weatherIndex + "', " +
                 "'" + address + "', " +
                 "'" + "" + "', " +
                 "'" + "" + "', " +
@@ -540,7 +540,7 @@ public class Fragment2 extends Fragment {
 
             String sql = "update " + NoteDatabase.TABLE_NOTE +
                     "set" +
-                    " WEATHER = '" + weatehrIndex + "'" +
+                    " WEATHER = '" + weatherIndex + "'" +
                     " ,ADDRESS = '" + address + "'" +
                     " ,LOCATION_X = '" + "" + "'" +
                     " ,LOCATION_Y = '" + "" + "'" +
