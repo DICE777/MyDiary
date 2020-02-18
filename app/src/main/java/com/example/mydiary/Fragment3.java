@@ -3,6 +3,7 @@ package com.example.mydiary;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -212,15 +213,37 @@ public class Fragment3 extends Fragment {
         chart.invalidate();
     }
 
-    private void setData2() {
+    private void setData2(HashMap<String, Integer> dataHash2) {
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(1.0f, 20.0f, getResources().getDrawable(R.drawable.smile1_24)));
-        entries.add(new BarEntry(2.0f, 40.0f, getResources().getDrawable(R.drawable.smile2_24)));
-        entries.add(new BarEntry(3.0f, 60.0f, getResources().getDrawable(R.drawable.smile3_24)));
-        entries.add(new BarEntry(4.0f, 30.0f, getResources().getDrawable(R.drawable.smile4_24)));
-        entries.add(new BarEntry(5.0f, 90.0f, getResources().getDrawable(R.drawable.smile5_24)));
 
-        BarDataSet dataSet2 = new BarDataSet(entries, "Sinus Function");
+        String[] keys = {"0", "1", "2", "3", "4", "5", "6"};
+        int[] icons = {R.drawable.smile1_24, R.drawable.smile2_24, R.drawable.smile3_24, R.drawable.smile4_24, R.drawable.smile5_24};
+
+        for (int i = 0; i < keys.length; i++) {
+            float value = 0.0f;
+            Integer outValue = dataHash2.get(keys[i]);
+            NoteDatabase.println("#" + i + " -> " + outValue);
+            if (outValue != null) {
+                value = outValue.floatValue();
+            }
+
+            Drawable drawable = null;
+            if (value <= 1.0f) {
+                drawable = getResources().getDrawable(icons[0]);
+            } else if (value <= 2.0f) {
+                drawable = getResources().getDrawable(icons[1]);
+            } else if (value <= 3.0f) {
+                drawable = getResources().getDrawable(icons[2]);
+            } else if (value <= 4.0f) {
+                drawable = getResources().getDrawable(icons[3]);
+            } else if (value <= 5.0f) {
+                drawable = getResources().getDrawable(icons[4]);
+            }
+
+            entries.add(new BarEntry(Float.valueOf(String.valueOf(i+1)), value, drawable));
+        }
+
+        BarDataSet dataSet2 = new BarDataSet(entries, "요일별 기분");
         dataSet2.setColor(Color.rgb(240, 120, 124));
 
         ArrayList<Integer> colors = new ArrayList<>();
