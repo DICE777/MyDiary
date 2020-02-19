@@ -262,17 +262,25 @@ public class Fragment3 extends Fragment {
         chart2.invalidate();
     }
 
-    private void setData3() {
+    private void setData3(ArrayList<Float> dataKeys3, ArrayList<Integer> dataValues3) {
+        NoteDatabase.println("setData3 called.");
 
-        ArrayList<Entry> values = new ArrayList<>();
-        values.add(new Entry(24f, 20.0f));
-        values.add(new Entry(48f, 50.0f));
-        values.add(new Entry(72f, 30.0f));
-        values.add(new Entry(96f, 70.0f));
-        values.add(new Entry(120f, 90.0f));
+        ArrayList<Entry> entries = new ArrayList<>();
+
+        for (int i = 0 ; i < entries.size(); i++) {
+            try {
+                float outKey = dataKeys3.get(i);
+                Integer outValue = dataValues3.get(i);
+
+                NoteDatabase.println("#" + i + " -> " + outKey + ", " + outValue);
+                entries.add(new Entry(outKey, new Float(outValue)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+        LineDataSet set1 = new LineDataSet(entries, "기분 변화");
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);
         set1.setColor(ColorTemplate.getHoloBlue());
         set1.setValueTextColor(ColorTemplate.getHoloBlue());
@@ -297,6 +305,7 @@ public class Fragment3 extends Fragment {
     public void loadStartData() {
         NoteDatabase database = NoteDatabase.getInstance(context);
 
+        // 기분별 비율
         String sql = "select mood " +
                 " , count(mood) " +
                 "from " + NoteDatabase.TABLE_NOTE + " " +
