@@ -33,6 +33,7 @@ import com.github.mikephil.charting.utils.MPPointF;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -309,8 +310,8 @@ public class Fragment3 extends Fragment {
         String sql = "select mood " +
                 " , count(mood) " +
                 "from " + NoteDatabase.TABLE_NOTE + " " +
-                "where create_date >= '2019-02-01' " +
-                " and create_date < '2019-03-01' " +
+                "where create_date >= '2020-02-01' " +
+                " and create_date < '2020-03-11' " +
                 "group by mood";
 
         Cursor cursor = database.rawQuery(sql);
@@ -330,5 +331,77 @@ public class Fragment3 extends Fragment {
 
         setData1(dataHash1);
 
+        // 요일별 기분
+        sql = "select strftime('%w', create_date) " +
+                " , avg(mood) " +
+                "from " + NoteDatabase.TABLE_NOTE + " " +
+                "where create_date >= '2020-02-01' " +
+                " and create_date < '2020-03-11' " +
+                "group by strftime('%w', create_date)";
+
+        cursor = database.rawQuery(sql);
+        recordCount = cursor.getCount();
+        NoteDatabase.println("recordCount : " + recordCount);
+
+        HashMap<String, Integer> dataHash2 = new HashMap<String, Integer>();
+        for (int i = 0; i < recordCount; i++) {
+            cursor.moveToNext();
+
+            String weekDay = cursor.getString(0);
+            int moodCount = cursor.getInt(1);
+
+            NoteDatabase.println("#" + i + " -> " + weekDay + ", " + moodCount);
+            dataHash2.put(weekDay, moodCount);
+        }
+
+        setData2(dataHash2);
+
+        // 기분 변화
+        sql = "select strftime('%Y-%m-%d', create_date) " +
+                " , avg(cast(mood as real)) " +
+                "from " + NoteDatabase.TABLE_NOTE + " " +
+                "where create_date >= '2020-02-13' " +
+                " and create_date < '2020-03-11' " +
+                "group by strftime('%Y-%m-%d', create_date)";
+
+        cursor = database.rawQuery(sql);
+        recordCount = cursor.getCount();
+        NoteDatabase.println("recourdCount : " + recordCount);
+
+        HashMap<String,Integer> recordsHash = new HashMap<String, Integer>();
+        for (int i = 0; i < recordCount; i++) {
+            cursor.moveToNext();
+
+            String monthDate = cursor.getString(0);
+            int moodCount = cursor.getInt(1);
+
+            NoteDatabase.println("#" + i + " -> " + monthDate + ", " + moodCount);
+            recordsHash.put(monthDate, moodCount);
+        }
+
+        ArrayList<Float> dataKeys3 = new ArrayList<Float>();
+        ArrayList<Integer> dataValues3 = new ArrayList<Integer>();
+
+        Date todayDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(todayDate);
+        cal.add(Calendar.DAY_OF_MONTH, -7);
+
+        for (int i = 0; i < 7; i++) {
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            String monthDate = AppConstants.dateFormat5.format(cal.getTime());
+            Object moodCount = recordsHash.get(monthDate);
+
+            dataKeys3.add((i-6) * 24.0f);
+            if (moodCount == null) {
+                dataValues3.add(0);
+            } else {
+                dataValues3.add((Integer)moodCount);
+            }
+
+            NoteDatabase.println("#" + i + " -> " + monthDate + ", " + moodCount);
+        }
+
+        setData3(dataKeys3, dataValues3);
     }
 }
