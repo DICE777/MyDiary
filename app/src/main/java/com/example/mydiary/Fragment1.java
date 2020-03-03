@@ -147,7 +147,7 @@ public class Fragment1 extends Fragment {
                 String picture = outCursor.getString(7);
                 String dateStr = outCursor.getString(8);
                 String createDateStr = null;
-                if (dateStr != null && dateStr.length() > 0) {
+                if (dateStr != null && dateStr.length() > 10) {
                     try {
                         Date inDate = AppConstants.dateFormat4.parse(dateStr);
                         createDateStr = AppConstants.dateFormat3.format(inDate);

@@ -129,6 +129,8 @@ public class Fragment2 extends Fragment {
             }
         });
 
+        moodSlider = rootView.findViewById(R.id.sliderView);
+
         Button saveButton = rootView.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,6 +298,8 @@ public class Fragment2 extends Fragment {
             } else {
                 setPicture(item.getPicture(), 1);
             }
+
+            setMood(item.getMood());
         } else {
             mMode = AppConstants.MODE_INSERT;
 
@@ -422,8 +426,7 @@ public class Fragment2 extends Fragment {
                     Log.d(TAG, "onActivityResult() for REQ_PHOTO_CAPTURE");
                     Log.d(TAG, "resultCode : " + resultCode);
 
-                    resultPhotoBitmap = decodeSampledBitmapFromResource(file, pictureImageView.getWidth(), pictureImageView.getHeight());
-                    pictureImageView.setImageBitmap(resultPhotoBitmap);
+                    setPicture(file.getAbsolutePath(), 8);
 
                     break;
                 case AppConstants.REQ_PHOTO_SELECTION:
@@ -524,7 +527,7 @@ public class Fragment2 extends Fragment {
                 "'" + "" + "', " +
                 "'" + contents + "', " +
                 "'" + moodIndex + "', " +
-                "'" + picturePath + ";)";
+                "'" + picturePath + "')";
 
         Log.d(TAG, "sql : "+ sql);
         NoteDatabase database = NoteDatabase.getInstance(context);
