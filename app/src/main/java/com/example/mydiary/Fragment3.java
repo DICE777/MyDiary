@@ -82,7 +82,7 @@ public class Fragment3 extends Fragment {
         chart.setUsePercentValues(true);
         chart.getDescription().setEnabled(false);
 
-        chart.setCenterText("기분별 비율");
+        chart.setCenterText(getResources().getString(R.string.graph1_title));
 
         chart.setTransparentCircleColor(Color.WHITE);
         chart.setTransparentCircleAlpha(110);
