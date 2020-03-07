@@ -18,4 +18,5 @@
     <string name="graph1_title">기분별 비율</string>
     <string name="graph2_title">요일별 기분</string>
     <string name="graph3_title">기분 변화</string>
+    <string name="title_activity_splash">SplashActivity</string>
 </resources>
