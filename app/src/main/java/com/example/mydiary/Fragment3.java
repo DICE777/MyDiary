@@ -88,9 +88,7 @@ public class Fragment3 extends Fragment {
         chart.setTransparentCircleAlpha(110);
         chart.setHoleRadius(58f);
         chart.setTransparentCircleRadius(61f);
-
         chart.setDrawCenterText(true);
-
         chart.setHighlightPerTapEnabled(true);
 
         Legend legend1 = chart.getLegend();
@@ -99,10 +97,9 @@ public class Fragment3 extends Fragment {
         chart.setEntryLabelColor(Color.WHITE);
         chart.setEntryLabelTextSize(12f);
 
-        // bar chart
+        // setting for bar chart
         chart2 = rootView.findViewById(R.id.chart2);
         chart2.setDrawValueAboveBar(true);
-
         chart2.getDescription().setEnabled(false);
         chart2.setDrawGridBackground(false);
 
@@ -123,7 +120,7 @@ public class Fragment3 extends Fragment {
 
         chart2.animateXY(1500, 1500);
 
-        // line chart
+        // setting for line chart
         chart3 = rootView.findViewById(R.id.chart3);
 
         chart3.getDescription().setEnabled(false);
@@ -244,7 +241,7 @@ public class Fragment3 extends Fragment {
             entries.add(new BarEntry(Float.valueOf(String.valueOf(i+1)), value, drawable));
         }
 
-        BarDataSet dataSet2 = new BarDataSet(entries, "요일별 기분");
+        BarDataSet dataSet2 = new BarDataSet(entries, getResources().getString(R.string.graph2_title));
         dataSet2.setColor(Color.rgb(240, 120, 124));
 
         ArrayList<Integer> colors = new ArrayList<>();
@@ -281,7 +278,7 @@ public class Fragment3 extends Fragment {
         }
 
         // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(entries, "기분 변화");
+        LineDataSet set1 = new LineDataSet(entries, getResources().getString(R.string.graph3_title));
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);
         set1.setColor(ColorTemplate.getHoloBlue());
         set1.setValueTextColor(ColorTemplate.getHoloBlue());
@@ -310,8 +307,8 @@ public class Fragment3 extends Fragment {
         String sql = "select mood " +
                 " , count(mood) " +
                 "from " + NoteDatabase.TABLE_NOTE + " " +
-                "where create_date >= '2020-02-01' " +
-                " and create_date < '2020-03-11' " +
+                "where create_date >= '" + getMonthBefore(1) + "' " +
+                " and create_date < '" + getToday() + "' " +
                 "group by mood";
 
         Cursor cursor = database.rawQuery(sql);
@@ -335,8 +332,8 @@ public class Fragment3 extends Fragment {
         sql = "select strftime('%w', create_date) " +
                 " , avg(mood) " +
                 "from " + NoteDatabase.TABLE_NOTE + " " +
-                "where create_date >= '2020-02-01' " +
-                " and create_date < '2020-03-11' " +
+                "where create_date >= '" + getMonthBefore(1) + "' " +
+                " and create_date < '" + getToday() + "' " +
                 "group by strftime('%w', create_date)";
 
         cursor = database.rawQuery(sql);
@@ -360,8 +357,8 @@ public class Fragment3 extends Fragment {
         sql = "select strftime('%Y-%m-%d', create_date) " +
                 " , avg(cast(mood as real)) " +
                 "from " + NoteDatabase.TABLE_NOTE + " " +
-                "where create_date >= '2020-02-13' " +
-                " and create_date < '2020-03-11' " +
+                "where create_date >= '" + getDayBefore(7) + "' " +
+                " and create_date < '" + getToday() + "' " +
                 "group by strftime('%Y-%m-%d', create_date)";
 
         cursor = database.rawQuery(sql);
@@ -403,5 +400,38 @@ public class Fragment3 extends Fragment {
         }
 
         setData3(dataKeys3, dataValues3);
+    }
+
+    public String getToday() {
+        Date todayDate = new Date();
+
+        return AppConstants.dateFormat5.format(todayDate);
+    }
+
+    public String getTomorrow() {
+        Date todayDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(todayDate);
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+
+        return AppConstants.dateFormat5.format(cal.getTime());
+    }
+
+    public String getDayBefore(int amount) {
+        Date todayDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(todayDate);
+        cal.add(Calendar.DAY_OF_MONTH, (amount * -1));
+
+        return AppConstants.dateFormat5.format(cal.getTime());
+    }
+
+    public String getMonthBefore(int amount) {
+        Date todayDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(todayDate);
+        cal.add(Calendar.MONTH, (amount * -1));
+
+        return AppConstants.dateFormat5.format(cal.getTime());
     }
 }
